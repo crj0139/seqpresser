@@ -9,7 +9,7 @@ seqrequester
 
 ## Contents
 
-<pre>stapler</pre> - tool for mapping SRA reads to reference genomes and quickly appending coordinate info to reads for downstream graphing
+###stapler - tool for mapping SRA reads to reference genomes and quickly appending coordinate info to reads for downstream graphing
 
-<pre>sim2graph</pre> - simulates reads from reference genome for downstream graphing
+###sim2graph - simulates reads from reference genome for downstream graphing
 
