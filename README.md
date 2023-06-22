@@ -3,9 +3,7 @@ A dedicated suite of tools for preparing sequencing data for deep learning
 
 ## Dependencies
 
-conda
-
-[seqrequester](https://github.com/marbl/seqrequester)
+under construction
 
 ## Contents
 
