@@ -1,4 +1,4 @@
-# seqpresser
+# seqpresser (in development)
 A dedicated suite of tools for preparing sequencing data for deep learning
 
 ## Dependencies
