@@ -5,5 +5,13 @@ import os
 
 repodir = os.getcwd()
 
-seqtk = "seqtk seq -A sample.fastq > sample.fasta" 
-subprocess.run(command, shell=True, cwd=repodir)
+
+
+# INPUT 1 - sample.fastq (or .fasta if no need for conversion)
+
+seqtk_path = "/path/to/seqtk"
+input_file = "sample.fastq"
+output_file = "sample.fasta"
+
+convert = "seqtk seq -A sample.fastq > sample.fasta" 
+subprocess.run(convert, shell=True, cwd=repodir)
