@@ -1,17 +1,41 @@
 import os
 import argparse
+import subprocess
+
+# stapler.py -i/--input -r/--reference  -t/--threads    -o/--output -f/--format
+
+path_variable = os.environ.get('PATH')
+print(f"Current PATH variable: {path_variable}")
+
 
 def process_sra(sra_number):
-    # Implement SRA processing logic here
+    # Execute prefetch command using subprocess
+    cmd = f"prefetch {sra_number}"
+    try:
+        subprocess.run(cmd, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing prefetch command: {e}")
+        return
+
+    # Continue with the remaining processing logic
     pass
+
+
+
+
+
+
+
+
+# ################################################
 
 def process_input_genome(input_genome):
-    # Implement input genome processing logic here
-    pass
+    # Placeholder for input genome processing logic
+    print(f"Processing input genome: {input_genome}")
 
 def generate_output(output_prefix, output_format):
-    # Implement output file generation logic here
-    pass
+    # Placeholder for output file generation logic
+    print(f"Generating output: {output_prefix}.{output_format}")
 
 def main():
     # Parse command-line arguments
