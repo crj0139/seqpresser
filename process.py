@@ -44,8 +44,6 @@ def process_sra(sra_number):
         except subprocess.CalledProcessError as e:
             print(f"Error executing seqtk command: {e}")
             return
-            
-        # Must assign unique headers?
 
         # Change back to the original working directory
         os.chdir('..')

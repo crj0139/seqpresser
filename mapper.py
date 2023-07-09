@@ -1,4 +1,8 @@
-def execute_minimap2(reference_genome, fasta_file, threads):
+import subprocess
+import os
+from generate_output import generate_output
+
+def execute_minimap2(reference_genome, fasta_file, threads, output_prefix, output_format):
     # Execute minimap2 command using subprocess
     minimap2_cmd = f"minimap2 -ax map-hifi -t {threads} --sam-hit-only --secondary=no {reference_genome} {fasta_file}"
     sam_file_path = "mapped.sam"
@@ -25,6 +29,8 @@ def execute_minimap2(reference_genome, fasta_file, threads):
         print(f"Error removing .sam file: {e}")
 
     # Generate output
-    output_prefix = "mapped"
-    output_format = 1
-    generate_output(output_prefix, output_format)
+    generate_output(output_prefix, output_format, threads)
+
+
+# Example usage
+execute_minimap2("reference_genome.fasta", "input.fasta", 4, "output_prefix", 1)
