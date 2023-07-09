@@ -6,3 +6,17 @@ scratch.txt
 mapped.bam
 mapped.bam_hits.txt
 old
+hits.bed
+reads_uniq.fa
+reads_uniq_dedup.fa
+0.fa
+0.fasta
+mapped.a.fa
+mapped.b.fa
+mapped.c.fa
+mapped.d.fa
+mapped.e.fa
+mapped.f.fa
+mapped.g.fa
+0.int.fa
+0.blanked.fa

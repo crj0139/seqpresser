@@ -5,11 +5,15 @@
 import argparse
 import subprocess
 import os
+import shutil
+
 
 class SRAImportResult:
-    def __init__(self, fastq_file_path, fasta_file_path):
+    def __init__(self, fastq_file_path, fasta_file_path, directory_name):
         self.fastq_file_path = fastq_file_path
         self.fasta_file_path = fasta_file_path
+        self.directory_name = directory_name
+        
 
 def process_sra(sra_number):
     # Execute prefetch command using subprocess
@@ -54,7 +58,7 @@ def process_sra(sra_number):
         os.chdir('..')
 
         # Return the SRA import result
-        return SRAImportResult(fastq_file_path, fasta_file_path)
+        return SRAImportResult(fastq_file_path, fasta_file_path, directory_name)
     else:
         print(f"Directory '{directory_name}' does not exist.")
         return
@@ -63,8 +67,8 @@ def process_sra(sra_number):
 def execute_minimap2(reference_genome, fasta_file, threads, output_prefix, output_format):
     # Execute minimap2 command using subprocess
     minimap2_cmd = f"minimap2 -ax map-hifi -t {threads} --sam-hit-only --secondary=no {reference_genome} {fasta_file}"
-    sam_file_path = "mapped.sam"
-    bam_file_path = "mapped.bam"
+    sam_file_path = f"{output_prefix}.sam"
+    bam_file_path = f"{output_prefix}.bam"
 
     try:
         subprocess.run(f"{minimap2_cmd} > {sam_file_path}", shell=True, check=True)
@@ -86,20 +90,39 @@ def execute_minimap2(reference_genome, fasta_file, threads, output_prefix, outpu
     except OSError as e:
         print(f"Error removing .sam file: {e}")
 
-    # Generate output
-    generate_output(output_prefix, output_format, threads)
-
 
 def generate_output(output_prefix, output_format, threads):
-    # Execute samtools command to extract hits
-    samtools_cmd = f"samtools view -@ {threads} -F 4 -q 5 -h mapped.bam | cut -f1 > mapped.bam_hits.txt"
+    hits_bed = f"{output_prefix}_hits.bed"
+    samtools_cmd = f"samtools view -@ {threads} -F 4 -q 5 -h {output_prefix}.bam | cut -f1 > {hits_bed}"
     try:
         subprocess.run(samtools_cmd, shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error executing samtools command: {e}")
         return
 
-    # Rest of the generate_output code...
+
+def execute_additional_commands(output_prefix):
+    additional_commands = [
+        f"awk 'NR==FNR{{des[\">\"$1]=$0;next}}/^>/ && des[$1]{{$0=\">\"des[$1]}}1' {output_prefix}_uniqhit.bed {output_prefix}_reads_uniq_dedup.fa > {output_prefix}_mapped.a.fa",
+        f"sed -e 's/>*-/strand=minus,/g' {output_prefix}_mapped.a.fa > {output_prefix}_mapped.b.fa && rm {output_prefix}_mapped.a.fa",
+        f"sed -e 's/>*+/strand=+,/g' {output_prefix}_mapped.b.fa > {output_prefix}_mapped.c.fa && rm {output_prefix}_mapped.b.fa",
+        f"sed -e 's/>*strand=+,\t/strand=+,\tstart=/g' {output_prefix}_mapped.c.fa > {output_prefix}_mapped.d.fa && rm {output_prefix}_mapped.c.fa",
+        f"sed -e 's/>*strand=minus,\t/strand=minus,\tstart=/g' {output_prefix}_mapped.d.fa > {output_prefix}_mapped.e.fa && rm {output_prefix}_mapped.d.fa",
+        f"sed 's/\\(.*\\)\t/\\1,\\tend=/' {output_prefix}_mapped.e.fa > {output_prefix}_mapped.f.fa && rm {output_prefix}_mapped.e.fa",
+        f"sed -e 's/>*=minus/=-/g' {output_prefix}_mapped.f.fa > {output_prefix}_mapped.g.fa && rm {output_prefix}_mapped.f.fa",
+        f"for f in {output_prefix}*.g.fa; do mv -- \"$f\" \"${{f%.g.fa}}.formatted.fasta\"; done",
+        f"awk 'BEGIN{{RS = \">\" ; FS = \"\\n\" ; ORS = \"\"}} $2 {{print \">{output_prefix}$0\"}}' {output_prefix}_reads_uniq_dedup.fa > {output_prefix}_0.int.fa && rm {output_prefix}_reads_uniq_dedup.fa && mv {output_prefix}_0.int.fa {output_prefix}_0.blanked.fasta",
+        f"sed -e \"s/>*[[:space:]]\\+/ /g\" {output_prefix}_0.blanked.fasta > {output_prefix}_0.fa && rm {output_prefix}_0.blanked.fasta && sed -e '/^[[:space:]]*$/d' {output_prefix}_0.fa > {output_prefix}_0.0.fasta && rm {output_prefix}_0.fa"
+    ]
+
+    for command in additional_commands:
+        try:
+            subprocess.run(command, shell=True, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing additional commands: {e}")
+            return
+
+    print("Additional commands executed successfully.")
 
 
 def main():
@@ -118,17 +141,24 @@ def main():
         if not sra_result:
             print("Error processing SRA.")
             return
+
+        # Execute minimap2
+        execute_minimap2(
+            args.reference,
+            sra_result.fasta_file_path,
+            args.threads,
+            args.output,
+            args.format
+        )
     else:
         print("Please provide -i/--input argument.")
-        return
 
-    # Execute minimap2
-    if sra_result:
-        execute_minimap2(args.reference, sra_result.fasta_file_path, args.threads, args.output, args.format)
-    else:
-        print("Error processing SRA.")
+    if args.format == '1':
+        generate_output(args.output, args.format, args.threads)
+        execute_additional_commands()
+
+    print("Stapler program completed successfully.")
 
 
 if __name__ == '__main__':
     main()
-
