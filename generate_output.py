@@ -1,9 +1,9 @@
 import subprocess
 import os
 
-def generate_output(output_format):
+def generate_output(output_prefix, output_format):
     # Append coordinates to fasta headers
-    mapped_fa_file_path = "<minimap2_output>mapped.a.fa"  # Update with the desired filename for the mapped fasta file
+    mapped_fa_file_path = f"{output_prefix}.mapped.fa"  # Update with the desired filename for the mapped fasta file
 
     try:
         # Append coordinates to fasta headers using awk command
@@ -22,21 +22,7 @@ def generate_output(output_format):
     if output_format == 1:
         # Format for output format 1
         format_cmd = (
-            f"sed -e 's/>*-/strand=minus,/g' {mapped_fa_file_path} > <minimap2_output>mapped.b.fa && "
-            f"rm {mapped_fa_file_path} && "
-            f"sed -e 's/>*+/strand=+,/g' <minimap2_output>mapped.b.fa > <minimap2_output>mapped.c.fa && "
-            f"rm <minimap2_output>mapped.b.fa && "
-            f"sed -e 's/>*strand=+,\t/strand=+,\tstart=/g' <minimap2_output>mapped.c.fa > <minimap2_output>mapped.d.fa && "
-            f"rm <minimap2_output>mapped.c.fa && "
-            f"sed -e 's/>*strand=minus,\t/strand=minus,\tstart=/g' <minimap2_output>mapped.d.fa > <minimap2_output>mapped.e.fa && "
-            f"rm <minimap2_output>mapped.d.fa && "
-            f"sed 's/\\(.*\\)\\t/\\1,\\tend=/' <minimap2_output>mapped.e.fa > <minimap2_output>mapped.f.fa && "
-            f"rm <minimap2_output>mapped.e.fa && "
-            f"sed -e 's/>*=minus/=-/g' <minimap2_output>mapped.f.fa > <minimap2_output>mapped.g.fa && "
-            f"rm <minimap2_output>mapped.f.fa && "
-            f"for f in *.g.fa; do "
-            f"    mv -- \"$f\" \"${{f%.g.fa}}.formatted.fasta\""
-            f"done && rm *.g.fa"
+            f"sed -e 's/>*-/strand=minus,/g' {mapped_fa_file_path} > {output_prefix}.formatted.fasta"
         )
     elif output_format == 2:
         # Placeholder for format 2 command
@@ -55,6 +41,3 @@ def generate_output(output_format):
     except subprocess.CalledProcessError as e:
         print(f"Error executing format command: {e}")
         return
-
-
-if __name__

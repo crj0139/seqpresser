@@ -1,7 +1,3 @@
-import subprocess
-import os
-from generate_output import generate_output
-
 def execute_minimap2(reference_genome, fasta_file, threads):
     # Execute minimap2 command using subprocess
     minimap2_cmd = f"minimap2 -ax map-hifi -t {threads} --sam-hit-only --secondary=no {reference_genome} {fasta_file}"
@@ -32,7 +28,3 @@ def execute_minimap2(reference_genome, fasta_file, threads):
     output_prefix = "mapped"
     output_format = 1
     generate_output(output_prefix, output_format)
-
-
-# Example usage
-execute_minimap2("reference_genome.fasta", "input.fasta", 4)
