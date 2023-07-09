@@ -3,8 +3,104 @@
 # python stapler.py -i SRR14751989 -r SARS2.fna -t 2 -o SARS2test -f 1
 
 import argparse
-from process import process_sra
-from mapper import execute_minimap2
+import subprocess
+import os
+
+class SRAImportResult:
+    def __init__(self, fastq_file_path, fasta_file_path):
+        self.fastq_file_path = fastq_file_path
+        self.fasta_file_path = fasta_file_path
+
+def process_sra(sra_number):
+    # Execute prefetch command using subprocess
+    prefetch_cmd = f"prefetch {sra_number}"
+    try:
+        subprocess.run(prefetch_cmd, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing prefetch command: {e}")
+        return
+
+    # Extract the directory name
+    directory_name = sra_number
+
+    # Check if the directory exists
+    if os.path.exists(directory_name):
+        # Change working directory to the prefetch-created directory
+        os.chdir(directory_name)
+
+        # Execute fasterq-dump command using subprocess
+        fasterq_cmd = f"fasterq-dump {sra_number}"
+        try:
+            subprocess.run(fasterq_cmd, shell=True, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing fasterq-dump command: {e}")
+            return
+
+        # Capture the generated .fastq file path
+        fastq_file = f"{sra_number}.fastq"
+        fastq_file_path = os.path.join(os.getcwd(), fastq_file)
+
+        # Execute seqtk command to convert .fastq to .fasta
+        fasta_file = f"{sra_number}.fasta"
+        fasta_file_path = os.path.join(os.getcwd(), fasta_file)
+        seqtk_cmd = f"seqtk seq -A {fastq_file_path} > {fasta_file_path}"
+        try:
+            subprocess.run(seqtk_cmd, shell=True, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing seqtk command: {e}")
+            return
+
+        # Change back to the original working directory
+        os.chdir('..')
+
+        # Return the SRA import result
+        return SRAImportResult(fastq_file_path, fasta_file_path)
+    else:
+        print(f"Directory '{directory_name}' does not exist.")
+        return
+
+
+def execute_minimap2(reference_genome, fasta_file, threads, output_prefix, output_format):
+    # Execute minimap2 command using subprocess
+    minimap2_cmd = f"minimap2 -ax map-hifi -t {threads} --sam-hit-only --secondary=no {reference_genome} {fasta_file}"
+    sam_file_path = "mapped.sam"
+    bam_file_path = "mapped.bam"
+
+    try:
+        subprocess.run(f"{minimap2_cmd} > {sam_file_path}", shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing minimap2 command: {e}")
+        return
+
+    # Convert SAM to BAM using samtools
+    samtools_cmd = f"samtools view -S -b -@ {threads} {sam_file_path} > {bam_file_path}"
+    try:
+        subprocess.run(samtools_cmd, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing samtools command: {e}")
+        return
+
+    # Remove the .sam file
+    try:
+        os.remove(sam_file_path)
+    except OSError as e:
+        print(f"Error removing .sam file: {e}")
+
+    # Generate output
+    generate_output(output_prefix, output_format, threads)
+
+
+def generate_output(output_prefix, output_format, threads):
+    # Execute samtools command to extract hits
+    samtools_cmd = f"samtools view -@ {threads} -F 4 -q 5 -h mapped.bam | cut -f1 > mapped.bam_hits.txt"
+    try:
+        subprocess.run(samtools_cmd, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing samtools command: {e}")
+        return
+
+    # Rest of the generate_output code...
+
 
 def main():
     # Parse command-line arguments
@@ -32,5 +128,7 @@ def main():
     else:
         print("Error processing SRA.")
 
+
 if __name__ == '__main__':
     main()
+

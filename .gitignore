@@ -4,3 +4,5 @@ mapped.sam
 SARS2.fna
 scratch.txt
 mapped.bam
+mapped.bam_hits.txt
+old
