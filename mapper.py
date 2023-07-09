@@ -31,6 +31,5 @@ def execute_minimap2(reference_genome, fasta_file, threads, output_prefix, outpu
     # Generate output
     generate_output(output_prefix, output_format, threads)
 
-
-# Example usage
-execute_minimap2("reference_genome.fasta", "input.fasta", 4, "output_prefix", 1)
+if __name__ == '__main__':
+    execute_minimap2("reference_genome.fasta", "input.fasta", 4, "output_prefix", 1)

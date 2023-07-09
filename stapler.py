@@ -12,8 +12,8 @@ def main():
     parser.add_argument('-i', '--input', help='Input SRA number')
     parser.add_argument('-f', '--format', help='Output format (1, 2, or 3)')
     parser.add_argument('-o', '--output', help='Output prefix')
-    parser.add_argument('-r', '--reference', help='Reference genome file')
-    parser.add_argument('-t', '--threads', type=int, help='Number of threads')
+    parser.add_argument('-r', '--reference', required=True, help='Reference genome file')
+    parser.add_argument('-t', '--threads', type=int, default=2, help='Number of threads')
     args = parser.parse_args()
 
     # Process the input based on the provided arguments
@@ -26,20 +26,11 @@ def main():
         print("Please provide -i/--input argument.")
         return
 
-    # Process the reference genome
-    if args.reference:
-        process_reference_genome(args.reference)
-    else:
-        print("Please provide -r/--reference argument.")
-        return
-
     # Execute minimap2
-    if args.reference and sra_result and args.threads:
+    if sra_result:
         execute_minimap2(args.reference, sra_result.fasta_file_path, args.threads, args.output, args.format)
     else:
-        print("Please provide -r/--reference, -i/--input, -t/--threads arguments.")
+        print("Error processing SRA.")
 
 if __name__ == '__main__':
     main()
-
-
