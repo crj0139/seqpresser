@@ -10,6 +10,13 @@ class SRAImportResult:
 
 
 def process_sra(sra_number):
+    # Check if the .fasta file already exists in the folder
+    fasta_file = f"{sra_number}/{sra_number}.fasta"
+    if os.path.exists(fasta_file):
+        fasta_file_path = os.path.abspath(fasta_file)
+        directory_name = os.path.dirname(fasta_file)
+        return SRAImportResult(None, fasta_file_path, directory_name)
+
     # Execute prefetch command using subprocess
     prefetch_cmd = f"prefetch {sra_number}"
     try:
