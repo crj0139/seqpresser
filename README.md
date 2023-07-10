@@ -1,7 +1,7 @@
 # seqpresser
 Tools for preparing sequencing data for deep learning
 
-#### Dependencies
+### Dependencies
 - [bedtools](https://github.com/arq5x/bedtools2)
 - [minimap2](https://github.com/lh3/minimap2)
 - [samtools](https://github.com/samtools/samtools)
@@ -9,9 +9,9 @@ Tools for preparing sequencing data for deep learning
 - [seqtk](https://github.com/lh3/seqtk)
 - [sra-tools](https://github.com/ncbi/sra-tools)
 
-## Tools
 
-### stapler 
+
+## stapler 
 Maps SRA reads to reference genomes, quickly generating alignments for downstream graphing.  Appends, or "staples", alignment information to fasta headers for quick usage.  Also useful for working with public sequencing data in general.
 
 #### Usage
@@ -35,7 +35,7 @@ IDs and coordinates.  Furthermore, it will append the mapping coordinate info to
 ".stapled.fasta" output file.
 
 
-### simstapler
+## simstapler
 Simulates read sequences from a reference genome using custom distributions. Staples alignment information to simulated reads, and generates a BED file for reference.
 
 #### Usage
