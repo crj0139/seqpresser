@@ -10,7 +10,7 @@ Tools for preparing sequencing data for deep learning
 
 ## Tools
 
-- stapler - Maps SRA reads to reference genomes, quickly generating alignments for downstream graphing.  Also useful for working with public sequencing data in general.
+### stapler - Maps SRA reads to reference genomes, quickly generating alignments for downstream graphing.  Also useful for working with public sequencing data in general.
 
 #### Usage
 
