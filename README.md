@@ -49,8 +49,8 @@ python simstapler.py -r <reference_fasta>  -t <threads> -o <output_prefix> -d <d
 	-d <distribution>: Values for read length distribution
 	-c <coverage>: Simulated coverage of reads
 	-f <format_preset>: Preset for determining .fasta header format
-		0	>read=<ID>,<forward/reverse>,position=<start>-<end>,length=<length>,<locus_id>
-		1	>Read_ID strand=<+/->, start=<start_coords>, end=<end_coords>
+		0	>read=<read_id>,<forward/reverse>,position=<start_coords>-<end_coords>,length=<length>,<locus_id>
+		1	><read_id> strand=<+/->, start=<start_coords>, end=<end_coords>
 ```
 
 This will create a BED file with alignment information in it, a set of reads (in .fasta format), and will generate a .fasta file with alignment coordinates stapled to the headers.
