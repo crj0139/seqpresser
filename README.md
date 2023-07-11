@@ -46,7 +46,8 @@ python simstapler.py -r <reference_fasta>  -t <threads> -o <output_prefix> -d <d
 	-r <reference_fasta>: genome source of simulated reads
 	-t <threads>: number of threads for simulating
 	-o <output_prefix>: Desired prefix for output files
-	-d <distribution>: Values for read length distribution
+	-d <distribution>: Values for read length distribution (only if no -l given)
+	-l <length>: Range of read lengths for simulated reads <min-max> (only if no -d given)
 	-c <coverage>: Simulated coverage of reads
 	-f <format_preset>: Preset for determining .fasta header format
 		0	>read=<read_id>,<forward/reverse>,position=<start_coords>-<end_coords>,length=<length>,<locus_id>
