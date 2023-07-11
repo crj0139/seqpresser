@@ -1,5 +1,4 @@
 # Test on SARS2 https://www.ncbi.nlm.nih.gov/assembly/GCF_009858895.2 SRR14751989
-# stapler.py -i/--input -r/--reference  -t/--threads    -o/--output -f/--format
 # python stapler.py -i <input_SRA> -r <reference_fasta>  -t <threads>    -o <output_prefix> -f <format_preset>
 # python stapler.py -i SRR14751989 -r SARS2.fna -t 2 -o SARS2test -f 1
 import argparse
