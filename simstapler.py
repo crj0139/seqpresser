@@ -1,6 +1,9 @@
 # Test on SARS2 https://www.ncbi.nlm.nih.gov/assembly/GCF_009858895.2 SRR14751989
 # python simstapler.py -r <reference_fasta>  -t <threads> -o <output_prefix> -d <distribution> -l <length> -c <coverage> -f <format_preset>
 # python simstapler.py -r SARS2.fna -t 2 -o SARS2testsim -f 1 -l 2000-20000 -c 40
+
+# pip 22.3.1
+
 import argparse
 import subprocess
 import os

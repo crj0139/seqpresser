@@ -1,0 +1,11 @@
+# name: my_environment
+# channels:
+#  - conda-forge
+# dependencies:
+#  - python=3.9
+#  - pip:
+#    - git+https://github.com/samtools/samtools.git
+#    - git+https://github.com/marbl/seqrequester.git
+#    - git+https://github.com/ncbi/sra-tools.git
+#    - git+https://github.com/lh3/minimap2.git
+#    - git+https://github.com/lh3/seqtk && cd seqtk && make && cd ..
