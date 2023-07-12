@@ -1,35 +1,30 @@
 #!/bin/bash
 
-# Clone the repository
-git clone https://github.com/username/repository.git
-cd repository
-
-# Create conda environment from environment.yml
+# conda env
 conda env create -f environment.yml
 
-# Activate the newly created environment
-conda activate seqpresser
+# git dependencies seqrequester/build/bin/seqrequester
+if ! command -v seqrequester &> /dev/null; then
+    echo "seqrequester not found in PATH. Installing..."
+    git clone https://github.com/marbl/seqrequester.git
+    cd seqrequester/src
+    make
+    cd ../../
+    echo "Installation complete!"
+else
+    echo "Unable to install read simulator"
+fi
 
-# Set up any dependencies
-# Example: Install Python dependencies using pip
-pip install -r requirements.txt
+https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.5/sratoolkit.3.0.5-ubuntu64.tar.gz
 
-# Perform additional setup steps
-# Example: Clone seqrequester repository and build
-git clone https://github.com/marbl/seqrequester.git
-cd seqrequester/src
-make
-
-# Return to the repository directory
-cd ../../
-
-# Perform any remaining setup steps
-# Example: Build and install the project
-python setup.py build
-python setup.py install
-
-# Optional: Clean up
-cd ..
-rm -rf repository
-
-echo "Installation complete!"
+# git dependencies seqrequester/build/bin/seqrequester
+if ! command -v prefetch &> /dev/null; then
+    echo "prefetch not found in PATH. Installing SRA tools..."
+    wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.5/sratoolkit.3.0.5-ubuntu64.tar.gz
+    cd seqrequester/src
+    make
+    cd ../../
+    echo "Installation complete!"
+else
+    echo "Unable to install read simulator"
+fi

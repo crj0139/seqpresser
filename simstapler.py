@@ -2,8 +2,6 @@
 # python simstapler.py -r <reference_fasta>  -t <threads> -o <output_prefix> -d <distribution> -l <length> -c <coverage> -f <format_preset>
 # python simstapler.py -r SARS2.fna -t 2 -o SARS2testsim -f 1 -l 2000-20000 -c 40
 
-# pip 22.3.1
-
 import argparse
 import subprocess
 import os
@@ -19,16 +17,26 @@ def measure_genome_size(reference_fasta):
     return genome_size
 
 def simulate_stapler(reference_fasta, threads, output_prefix, distribution, length_range, coverage, format_preset):
-    # Measure genome size
+    # genome size
     genome_size = measure_genome_size(reference_fasta)
     print("Genome Size:", genome_size)
 
-    # Validate the -d and -l arguments
+    # dist/length
     if (distribution is None and length_range is None) or (distribution is not None and length_range is not None):
         raise ValueError("Either -d or -l argument should be provided, but not both.")
 
-    # Build the seqrequester command based on the provided arguments
-    simulate_command = f"seqrequester simulate -genome {reference_fasta} -genomesize {genome_size} -coverage {coverage}"
+    # sequence simulator
+    seqrequester_executable = shutil.which('seqrequester')
+
+    if seqrequester_executable is not None:
+        # seqrequester found in PATH
+        print("seqrequester found in PATH, proceeding to simulation")
+    else:
+        # seqrequester not found in PATH, checking seqpresser DIR for copy
+        print("seqrequester not found in PATH, checking seqpresser DIR for copy")
+        seqrequester_executable = "./seqrequester/build/bin/seqrequester"
+
+    simulate_command = f"{seqrequester_executable} simulate -genome {reference_fasta} -genomesize {genome_size} -coverage {coverage}"
 
     if distribution is not None:
         simulate_command += f" -d {distribution}"
@@ -55,8 +63,9 @@ def simulate_stapler(reference_fasta, threads, output_prefix, distribution, leng
             if os.path.exists(file):
                 new_file = os.path.splitext(file)[0] + ".fasta"
                 os.rename(file, new_file)
-                
+
     print("Simulated reads saved")
+
     
 def transform_fasta_file(output_prefix):
     input_file = f"{output_prefix}.sim.fa"
@@ -94,7 +103,7 @@ def parse_length_range(length_range):
 
 def main():
     # Create argument parser
-    parser = argparse.ArgumentParser(description='SimStapler: A simulation program')
+    parser = argparse.ArgumentParser(description='simstapler')
 
     # Define command-line arguments
     parser.add_argument('-r', '--reference', metavar='<reference_fasta>', required=True, help='Reference FASTA file')

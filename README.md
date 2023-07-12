@@ -1,17 +1,21 @@
-<p align="center">
-  <img src="misc/seqp.jpg" width="400" title="seqp_logo">
+<p align="left">
+  <img src="misc/seqp.jpg" width="600" title="seqp_logo">
 </p>
 Tools for preparing sequencing data for deep learning
 
 ### Dependencies
-
-- Requires a functioning copy of [sra-tools](https://github.com/ncbi/sra-tools) (>= 3.0.5)
-- [bedtools](https://github.com/arq5x/bedtools2) (>= 2.26.0)
+- [sra-tools](https://github.com/ncbi/sra-tools) (needs prefetch and fasterq-dump)
+- [bedtools](https://github.com/arq5x/bedtools2)
 - [minimap2](https://github.com/lh3/minimap2) (>= 2.26)
-- [samtools](https://github.com/samtools/samtools) (>= 1.17)
+- [samtools](https://github.com/samtools/samtools) (>= 1.15.1)
 - [seqrequester](https://github.com/marbl/seqrequester)
 - [seqtk](https://github.com/lh3/seqtk)
 
+All dependencies except SRA-tools can be installed and loaded via:
+```
+bash ./install.sh
+conda activate seqpresser
+```
 
 ## stapler 
 Maps SRA reads to reference genomes, quickly generating alignments for downstream graphing.  Appends, or "staples", alignment information to fasta headers for quick reading.  (Also useful for working with public sequencing data in general).
