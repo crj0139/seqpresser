@@ -1,4 +1,5 @@
 #!/bin/bash
+# Sorts from longest to shortest contig, renames unique sequential headers
 # bash ./unisort.sh -i <input.fasta> -o <output_prefix>
 # Check if seqkit is present in PATH
 if ! command -v seqkit &> /dev/null; then
