@@ -1,10 +1,14 @@
 <p align="left">
   <img src="misc/seqp.jpg" width="600" title="seqp_logo">
 </p>
-Tools for preparing sequencing data for deep learning
+Seqpresser is a toolkit for preparing sequencing data for deep learning, specifically for downstream neural networks.  
+The stapler.py program was designed to be a useful, simple tool for quickly increasing public sequencing read support 
+for training graph neural networks that are intended to (re)assemble user-specified reads.  The simstapler.py program is 
+intended to quickly generate large amounts of simulated reads from a reference genome(s), which can later be independently 
+re-assembled via an OLC-based assembler and compared to the original simulated read source for graph training.
 
 ### Dependencies
-- [sra-tools](https://github.com/ncbi/sra-tools) (needs prefetch and fasterq-dump)
+- [sra-tools](https://github.com/ncbi/sra-tools) (needs SRA  prefetch and fasterq-dump in PATH)
 - [bedtools](https://github.com/arq5x/bedtools2)
 - [minimap2](https://github.com/lh3/minimap2) (>= 2.26)
 - [samtools](https://github.com/samtools/samtools) (>= 1.15.1)
@@ -18,7 +22,11 @@ conda activate seqpresser
 ```
 
 ## stapler 
-Maps SRA reads to reference genomes, quickly generating alignments for downstream graphing.  Appends, or "staples", alignment information to fasta headers for quick reading.  (Also useful for working with public sequencing data in general).
+Maps long SRA reads to reference genomes, quickly generating alignments for downstream graphing.  Appends, or "staples", alignment information to fasta headers for quick reading.
+Useful for high-throughput mapping of public sequencing data to a user-specified reference assembly.  Output is designed to
+be used for downstream training/validation in assembly graphs.
+
+(Also useful for working with public sequencing data in general).
 
 #### Usage
 
@@ -47,7 +55,7 @@ Simulates read sequences from a reference genome using custom distributions. Sta
 #### Usage
 
 ```
-python simstapler.py -r <reference_fasta>  -t <threads> -o <output_prefix> -d <distribution> -c <coverage>
+python python simstapler.py -r <reference_fasta>  -t <threads> -o <output_prefix> -d <distribution> -l <length> -c <coverage> -f <format_preset>
 
 	-r <reference_fasta>: genome source of simulated reads
 	-t <threads>: number of threads for simulating
@@ -60,4 +68,7 @@ python simstapler.py -r <reference_fasta>  -t <threads> -o <output_prefix> -d <d
 		1	><read_id> strand=<+/->, start=<start_coords>, end=<end_coords>
 ```
 
-This will create a BED file with alignment information in it, a set of reads (in .fasta format), and will generate a .fasta file with alignment coordinates stapled to the headers.
+This will create a set of reads (in .fasta format) with alignment coordinates stapled to the headers.
+
+
+
