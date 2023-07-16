@@ -1,6 +1,4 @@
-SARS2*
 __pycache__/
-SRR14751989
 mapped.sam
 scratch.txt
 mapped.bam
@@ -21,4 +19,8 @@ mapped.g.fa
 0.int.fa
 0.blanked.fa
 seqrequester
-araTha1*
+seqpr_test*
+SRR*
+*.stapled.fasta
+*.bed
+*.bam

@@ -2,9 +2,9 @@ import subprocess
 import os
 
 
-def execute_minimap2(reference_genome, fasta_file, threads, output_prefix, output_format):
+def execute_minimap2(reference_genome, fasta_file, threads, output_prefix, output_format, preset):
     # Execute minimap2 command using subprocess
-    minimap2_cmd = f"minimap2 -ax map-hifi -t {threads} --sam-hit-only --secondary=no {reference_genome} {fasta_file}"
+    minimap2_cmd = f"minimap2 -ax {preset} -t {threads} --sam-hit-only --secondary=no {reference_genome} {fasta_file}"
     sam_file_path = f"{output_prefix}.sam"
     bam_file_path = f"{output_prefix}.bam"
 

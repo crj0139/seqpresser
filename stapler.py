@@ -1,6 +1,6 @@
-# Test on SARS2 https://www.ncbi.nlm.nih.gov/assembly/GCF_009858895.2 SRR14751989
-# python stapler.py -i <input_SRA> -r <reference_fasta>  -t <threads>    -o <output_prefix> -f <format_preset>
-# python stapler.py -i SRR14751989 -r SARS2.fna -t 2 -o SARS2test -f 1
+
+# python stapler.py -i <input_SRA> -r <reference_fasta>  -t <threads>    -o <output_prefix> -f <format_preset>  -p <minimap2_preset>
+# python stapler.py -i SRR16925101	 -r ./seqpr_test.fna -t 2 -o seqprtest -f 1 -p map-pb
 import argparse
 import subprocess
 import sys
@@ -17,6 +17,7 @@ def main():
     parser.add_argument('-o', '--output', help='Output prefix')
     parser.add_argument('-r', '--reference', required=True, help='Reference genome file')
     parser.add_argument('-t', '--threads', type=int, default=2, help='Number of threads')
+    parser.add_argument('-p', '--minimap2_preset', help='Preset value for minimap2')
     args = parser.parse_args()
 
     # Process the input based on the provided arguments
@@ -35,13 +36,14 @@ def main():
         if os.path.exists(bam_file_path):
             print("Alignment .bam already found, skipping mapping")
         else:
-            # Execute minimap2
+            # Execute minimap2 with the preset value
             execute_minimap2(
                 args.reference,
                 sra_result.fasta_file_path,
                 args.threads,
                 args.output,
-                args.format
+                args.format,
+                args.minimap2_preset
             )
 
         # Check if the output BAM file exists after mapping

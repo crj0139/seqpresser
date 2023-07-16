@@ -34,7 +34,7 @@ The input for stapler is an SRA accession number, a desired target reference for
 and the desired prefix for output files:
 
 ```
-python stapler.py -i <input_SRA> -r <reference_fasta>  -t <threads> -o <output_prefix> -f <format_preset>
+python stapler.py -i <input_SRA> -r ./<reference_fasta>  -t <threads> -o <output_prefix> -f <format_preset>
 
 	-i <input_SRA>: SRA number of reads to be mapped to reference
 	-r <reference_fasta>: target reference genome for SRA reads to be mapped to
@@ -42,6 +42,7 @@ python stapler.py -i <input_SRA> -r <reference_fasta>  -t <threads> -o <output_p
 	-o <output_prefix>: Desired prefix for output files
 	-f <format_preset>: Preset for desired output format.
 		1	>Read_ID strand=<+/->, start=<start_coords>, end=<end_coords> 
+	-p <minimap2_preset>: preset for mapping parameters (designated by -ax in minimap2)
 ```
 
 This program will download the designated SRA data, map it to the target reference, and create a BED file containing
@@ -55,7 +56,7 @@ Simulates read sequences from a reference genome using custom distributions. Sta
 #### Usage
 
 ```
-python python simstapler.py -r <reference_fasta>  -t <threads> -o <output_prefix> -d <distribution> -l <length> -c <coverage> -f <format_preset>
+python python simstapler.py -r ./<reference_fasta>  -t <threads> -o <output_prefix> -d <distribution> -l <length> -c <coverage> -f <format_preset>
 
 	-r <reference_fasta>: genome source of simulated reads
 	-t <threads>: number of threads for simulating
