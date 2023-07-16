@@ -1,5 +1,5 @@
 <p align="left">
-  <img src="misc/seqp.jpg" width="600" title="seqp_logo">
+  <img src="misc/seqp.jpg" width="500" title="seqp_logo">
 </p>
 Seqpresser is a toolkit for preparing sequencing data for deep learning, specifically for downstream neural networks.  
 The stapler.py program was designed to be a useful, simple tool for quickly increasing public sequencing read support 
